@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CITY-OPTIONS</title>
+</head>
+<body>
+<option value="">Select city</option>
+<option th:each="ct : ${cities}"
+        th:value="${ct.id}"
+        th:text="${ct.name}">
+</option>
+</body>
+</html>

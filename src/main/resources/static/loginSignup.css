@@ -68,3 +68,31 @@ p {
 .noAcc a:hover{
   color: black;
 }
+
+/* Error message styles */
+.error-message {
+  color: #ffffff;
+  background-color: rgba(0, 0, 0, 0.7);
+  border: 1px solid #ffffff;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 0.9em;
+  text-align: left;
+}
+
+/* Password requirements styles */
+.password-requirements {
+  color: #333;
+  background-color: rgba(255, 255, 255, 0.9);
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 15px;
+  font-size: 0.8em;
+  text-align: left;
+}
+
+.password-requirements strong {
+  color: #000;
+}

@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}" >
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+
+
+    <title>Navbar</title>
+</head>
+<body>
+
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
+<nav id="navbar" th:fragment="navbar">
+    <ul class="navTable">
+        <li class="navElement">
+            <a href="/forYou">
+                <i class="fa-solid fa-house fa-3x"></i>
+                <span>For you page</span>
+            </a>
+        </li>
+        <li class="navElement">
+            <a href="/searchPage">
+                <i class="fa-solid fa-magnifying-glass fa-3x"></i>
+                <span>Search</span>
+            </a>
+        </li>
+        <li class="navElement">
+            <a href="/chat/friendList">
+                <i class="fa-solid fa-inbox fa-3x"></i>
+                <span>Chat</span>
+            </a>
+        </li>
+        <li class="navElement">
+            <a href="/notifications">
+                <i class="fa-solid fa-bell fa-3x"></i>
+                <span>Notifications</span>
+            </a>
+        </li>
+        <li class="navElementImg">
+            <a href="/home">
+                <img  th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" class="profileNavImg" alt="">
+                <span class="imgSpan">Home</span>
+            </a>
+        </li>
+        <li >
+            <a href="/logout">Logout</a>
+
+        </li>
+        <li >
+            <a href="/settings">profile Settings</a>
+
+        </li>
+        <li>
+            <a href="/post/newPost">new post</a>
+        </li>
+    </ul>
+</nav>
+</body>
+</html>

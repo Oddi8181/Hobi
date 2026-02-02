@@ -2,6 +2,7 @@ package gio.hobist.Controller;
 
 import gio.hobist.Dto.AutenticationDto;
 import gio.hobist.Service.AutenticationService;
+import gio.hobist.utils.PasswordValidator;
 import jakarta.servlet.http.HttpSession;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -31,6 +32,7 @@ public class AutenticationController {
     @RequestMapping(path="/signup")
     public String index(Model model){
         model.addAttribute("user", new AutenticationDto());
+        model.addAttribute("passwordRequirements", PasswordValidator.getPasswordRequirements());
         return "signupPage.html";
     }
 
@@ -39,37 +41,41 @@ public class AutenticationController {
 
 
     @PostMapping(path="/signup")
-    public String signUpPage(@ModelAttribute AutenticationDto user ) {
+    public String signUpPage(@ModelAttribute AutenticationDto user, Model model) {
         try {
             autenticationService.signUpUser(user);
-
             return "redirect:/login";
         }
+        catch (org.springframework.dao.DataIntegrityViolationException e) {
+            model.addAttribute("user", user);
+            if (e.getMessage().contains("user_e_mail_key")) {
+                model.addAttribute("errorMessage", "Email address is already registered");
+            } else {
+                model.addAttribute("errorMessage", "Registration failed. Please check your data.");
+            }
+            model.addAttribute("passwordRequirements", PasswordValidator.getPasswordRequirements());
+            return "signupPage.html";
+        }
         catch (Exception e) {
-        System.out.println(e.getMessage());//for testing, delete later
-            //return message for ui
-            return "redirect:/signup";
+            model.addAttribute("user", user);
+            model.addAttribute("errorMessage", e.getMessage());
+            model.addAttribute("passwordRequirements", PasswordValidator.getPasswordRequirements());
+            return "signupPage.html";
         }
     }
 
     @PostMapping(path="/login")
-    public String loginPage(@ModelAttribute("user") AutenticationDto user, HttpSession session){
-
+    public String loginPage(@ModelAttribute("user") AutenticationDto user, HttpSession session, Model model){
         try {
             AutenticationDto validUser = autenticationService.logInUser(user);
-
-                session.setAttribute("userName",validUser.getName());
-                session.setAttribute("userId",validUser.getId());
-
-                return "redirect:/home";
+            session.setAttribute("userName",validUser.getName());
+            session.setAttribute("userId",validUser.getId());
+            return "redirect:/home";
         }
         catch (Exception e){
-            System.out.println(e.getMessage());//for testing, delete later
-            //return message for ui
+            model.addAttribute("user", user);
+            model.addAttribute("errorMessage", e.getMessage());
+            return "loginPage.html";
         }
-
-        return "redirect:/login";
-
-
     }
 }

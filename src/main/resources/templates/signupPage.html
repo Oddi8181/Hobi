@@ -12,6 +12,17 @@ xmlns="http://www.w3.org/1999/xhtml">
     <form th:action="@{/signup}"  method="post" th:object="${user}" autocomplete="off">
         <h1 class="heading">Sign in here</h1>
 
+        <!-- Error message display -->
+        <div th:if="${errorMessage}" class="error-message">
+            <span th:text="${errorMessage}"></span>
+        </div>
+
+        <!-- Password requirements display -->
+        <div th:if="${passwordRequirements}" class="password-requirements">
+            <strong>Password Requirements:</strong><br/>
+            <span th:text="${passwordRequirements}"></span>
+        </div>
+
         <label>First name</label>
         <input type="text" th:field="*{name}" placeholder="First Name" class="input-controll">
         
@@ -27,8 +38,7 @@ xmlns="http://www.w3.org/1999/xhtml">
         <input type="password" th:field="*{password}" placeholder="Password" class="input-controll">
 
         <label>Confirm Password</label>
-<!--        <input type="password" name="confirmPassword" placeholder="Confirm Password" class="input-controll">-->
-            <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" class="input-controll">
+        <input type="password" th:field="*{confirmPassword}" placeholder="Confirm Password" class="input-controll">
 
         <button type="submit" class="button" value="signup">Sign In</button>
     </form>

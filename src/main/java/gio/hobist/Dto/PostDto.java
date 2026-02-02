@@ -1,9 +1,6 @@
 package gio.hobist.Dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.sql.Timestamp;
 import java.util.UUID;
@@ -11,13 +8,13 @@ import java.util.UUID;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class PostDto {
 
-    private UUID Id;
-    private UUID UserId;
+    private UUID id;
+    private UUID userId;
     private String message;
-    private String rawImage;//dto will get base64-encoded string for display of image
+    private String rawImage;
     private Integer likeNumber;
     private Timestamp createdAt;
 }

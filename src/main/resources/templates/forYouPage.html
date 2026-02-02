@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}">
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+    <title>For you</title>
+</head>
+<body>
+
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
+<section class="feed">
+    <h1>For you</h1>
+
+    <div th:if="${feed == null or #lists.isEmpty(feed)}">
+        <p>No posts from friends yet.</p>
+    </div>
+
+    <div th:each="post : ${feed}" class="post-card">
+        <div class="post-card__header">
+
+            <div th:with="author=${authors[post.userId]}">
+                <img th:if="${author != null and author.profilePicture != null}"
+                     th:src="@{/media/{userId}/{img}(userId=${author.id},img=${author.profilePicture})}"
+                     class="profile-photo" alt="profile">
+                <span th:text="${author != null ? author.name + ' ' + author.surname : 'Unknown'}">Author</span>
+            </div>
+            <span class="date" th:text="${#dates.format(post.createdAt, 'dd.MM.yyyy')}">01.01.1970</span>
+        </div>
+
+        <a th:href="@{/post/{postId}(postId=${post.id})}">
+            <div class="post-card__body">
+                <img th:if="${post.rawImage != null}" th:src="@{/media/{userId}/{img}(userId=${post.userId},img=${post.rawImage})}" style="width:50%; height: 50%" class="post-image" alt="post image">
+                <p th:text="${post.message}">Message</p>
+                <span th:text="${post.likeNumber}">0</span> likes
+            </div>
+        </a>
+
+        <div class="post-footer">
+
+        </div>
+    </div>
+</section>
+
+</body>
+</html>

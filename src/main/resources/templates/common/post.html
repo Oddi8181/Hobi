@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}" href="../../style2.css">
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+    <title>Title</title>
+</head>
+<body>
+    <nav th:replace="~{common/navbar :: navbar}"></nav>
+    <div class="post-card__header">
+        <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" class="profile-photo">
+        <span th:text="${user.name}"></span>
+        <span class="date" th:text="${#dates.format(post.createdAt, 'dd.MM.yyyy')}"></span>
+        <div class="post-card__body">
+            <img th:if="${post.rawImage != null}" th:src="@{/media/{userId}/{img}(userId=${post.userId},img=${post.rawImage})}" style="width:50%; height: 50%" class="post-image">
+            <p th:text="${post.message}"></p>
+        </div>
+        <div class="post-footer">
+            <span th:text="${post.likeNumber}"></span> likes
+
+            <br>
+            <form th:action="@{/post/{postId}/like(postId=${post.id})}" method="post">
+                <button  type="submit" class="btn">Like</button>
+            </form>
+
+        </div>
+
+        <form th:action="@{/post/{postId}/submitComment(postId=${post.id})}" method="post">
+           <textarea name="comment"></textarea>
+            <button type="submit" class="btn">submit</button>
+        </form>
+
+        <iframe th:src="@{/comments/{postId}(postId=${post.id})}" width="100%" height="50%">
+
+        </iframe>
+        <form th:if="${post.userId==user.id}" th:action="@{/post/{postId}/delete(postId=${post.id})}" method="post">
+           <button>delete post</button>
+        </form>
+
+    </div>
+
+
+</body>
+</html>

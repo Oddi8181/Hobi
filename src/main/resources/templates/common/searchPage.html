@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Search</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" th:href="@{/style2.css}" >
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
+<section class="search-container">
+
+    <form th:action="@{/search/users}" method="get" class="search-form">
+
+        <input
+                class="search-input"
+                type="text"
+                name="q"
+                placeholder="Search people..."
+                th:value="${param.q}"
+                autocomplete="off"
+                required
+        >
+
+        <select name="mode" class="search-mode">
+            <option value="all"
+                    th:selected="${param.mode == null or param.mode == 'all'}">
+                All users
+            </option>
+            <option value="sharedHobby"
+                    th:selected="${param.mode == 'sharedHobby'}">
+                Shared hobby
+            </option>
+        </select>
+
+        <button type="submit">Search</button>
+
+    </form>
+
+    <div id="resultsContainer">
+
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <div th:if="${noResults}" class="no-results">
+            <p th:text="${noResults}"></p>
+        </div>
+
+        <div th:if="${users != null and !users.isEmpty()}">
+
+            <div th:each="user : ${users}" class="search-result">
+                <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}"
+                     th:alt="${user.name + ' avatar'}"
+                     class="result-avatar" />
+
+                <div class="result-info">
+                    <h3>
+                        <span th:text="${user.name}">Name</span>
+                        <span th:text="${user.surname}">Surname</span>
+                    </h3>
+                    <div class="small">
+                        <span th:text="${user.userPageDescription}">Opis</span>
+                    </div>
+                </div>
+
+                <div class="result-actions">
+
+                    <a th:if="${acceptedFriends != null and acceptedFriends.contains(user.id)}"
+                       th:href="@{/profile/view/{id}(id=${user.id})}"
+                       class="btn-view-profile">
+                        Pregledaj profil i objave
+                    </a>
+
+                    <a th:if="${acceptedFriends == null or !acceptedFriends.contains(user.id)}"
+                       th:href="@{/friendship/add/{friendId}(friendId=${user.id})}"
+                       class="add-friend-btn">
+                        <i class="fa-solid fa-user-plus"></i> Add Friend
+                    </a>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+</body>
+</html>

@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}" >
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+    <meta charset="UTF-8">
+    <title>Settings</title>
+</head>
+<body>
+
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
+<section class="settings-section">
+
+    <h1 class="heading">Settings</h1>
+
+    <div class="profile-summary">
+        <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" alt="Profile picture">
+        <h2 th:text="${user.name} + ' ' + ${user.surname}">Name</h2>
+
+        <p><strong>Email:</strong> <span th:text="${user.email}"></span></p>
+        <p><strong>Country:</strong> <span th:text="${user.country != null ? user.country.name : '-'}"></span></p>
+        <p><strong>City:</strong> <span th:text="${user.city != null ? user.city.name : '-'}"></span></p>
+
+        <p><strong>Posts:</strong> <span th:text="${user.numberOfPosts}"></span></p>
+        <p><strong>Friends:</strong> <span th:text="${user.numberOfFriends}"></span></p>
+    </div>
+
+    <form th:action="@{/settings/location}" method="post" th:object="${settingsForm}" class="settings-form">
+
+
+        <h3>Location</h3>
+
+        <label>Country</label>
+        <select id="countrySelect" th:field="*{countryId}">
+            <option value="">Select country</option>
+            <option th:each="c : ${allCountries}"
+                    th:value="${c.id}"
+                    th:text="${c.name}">
+            </option>
+        </select>
+        <div th:if="${#fields.hasErrors('countryId')}" th:errors="*{countryId}"></div>
+
+        <label>City</label>
+        <select id="citySelect" th:field="*{cityId}">
+            <option value="">Select city</option>
+            <option th:each="ct : ${cities}"
+                    th:value="${ct.id}"
+                    th:text="${ct.name}">
+            </option>
+        </select>
+        <div th:if="${#fields.hasErrors('cityId')}" th:errors="*{cityId}"></div>
+
+        <button type="submit">Save location</button>
+    </form>
+
+
+    <form th:action="@{/settings/password}" th:object="${settingsForm}" method="post">
+        <h3>Change password</h3>
+        <input type="password" th:field="*{currentPassword}" placeholder="Current password">
+        <div th:if="${#fields.hasErrors('currentPassword')}" th:errors="*{currentPassword}"></div>
+
+        <input type="password" th:field="*{newPassword}" placeholder="New password">
+        <div th:if="${#fields.hasErrors('newPassword')}" th:errors="*{newPassword}"></div>
+
+        <input type="password" th:field="*{confirmPassword}" placeholder="Confirm new password">
+        <div th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+
+        <button type="submit">Save password</button>
+
+    </form>
+
+
+    <form th:action="@{/settings/description}" th:object="${settingsForm}" class="settings-form" method="post">
+        <h3>Edit description</h3>
+        <textarea th:field="*{description}" rows="4" placeholder="Description"></textarea>
+        <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></div>
+
+        <button type="submit">Save description</button>
+    </form>
+
+
+
+    <h3>Change profile picture</h3>
+    <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" class="settings-avatar" alt="">
+
+    <form th:action="@{/settings/profile-picture}" method="post" enctype="multipart/form-data">
+
+        <input type="file" name="profileImage" accept="image/*" required>
+        <button type="submit">Upload</button>
+
+        <div th:if="${param.picSaved}">Picture updated.</div>
+        <div th:if="${param.picError}" class="error">Upload failed.</div>
+    </form>
+
+
+    <h3>Hobbies</h3>
+
+    <form th:action="@{/settings/hobbies}" th:object="${settingsForm}" method="post">
+        <select th:field="*{hobbyIds}" multiple size="8">
+            <option th:each="h : ${allHobbies}"
+                    th:value="${h.id}"
+                    th:text="${h.name}">
+            </option>
+        </select>
+
+        <p>you can select multiple hobby's and then save!</p>
+        <button type="submit">Save hobbies</button>
+
+        <div th:if="${param.hobbySaved}">Hobbies updated.</div>
+    </form>
+
+</section>
+
+
+
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+
+        const countrySelect = document.getElementById("countrySelect");
+        const citySelect = document.getElementById("citySelect");
+
+        if (!countrySelect || !citySelect) return;
+
+        countrySelect.addEventListener("change", function () {
+            const countryId = this.value;
+
+
+            citySelect.innerHTML = '<option value="">Loading...</option>';
+
+            if (!countryId) {
+                citySelect.innerHTML = '<option value="">Select city</option>';
+                return;
+            }
+
+            fetch(`/settings/cities?countryId=${countryId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error("Failed to load cities");
+                    }
+                    return response.text();
+                })
+                .then(html => {
+                    citySelect.innerHTML = html;
+                })
+                .catch(err => {
+                    console.error(err);
+                    citySelect.innerHTML = '<option value="">Error loading cities</option>';
+                });
+        });
+    });
+</script>
+
+
+</body>
+</html>

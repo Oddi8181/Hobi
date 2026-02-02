@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Objave</title>
+    <link rel="stylesheet" th:href="@{/style2.css}">
+</head>
+<body>
+
+<div th:fragment="postsFragment">
+    <section class="posts-list">
+        <h2>Objave</h2>
+
+        <div th:if="${posts == null or #lists.isEmpty(posts)}">
+            <p>Nema objava.</p>
+        </div>
+
+        <div th:each="post : ${posts}" class="post-item">
+            <p th:text="${post.message}">Sadržaj objave</p>
+
+            <div th:if="${post.image != null}">
+                <img th:src="@{/media/{userId}/{img}(userId=${post.idUser},img=${post.image})}"
+                     th:alt="'slika objave ' + ${post.id}" style="max-width:100%;"/>
+            </div>
+
+            <div class="meta">
+                <small th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">Datum</small>
+                <span th:if="${post.likeNumber != null}"> • <span th:text="${post.likeNumber}">0</span> likes</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<div th:replace="~{this :: postsFragment (posts=${posts})}"></div>
+
+</body>
+</html>

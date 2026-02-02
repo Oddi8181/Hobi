@@ -10,57 +10,31 @@
     <title>Home Page</title>
 </head>
 <body>
-        
-        <nav id="navbar" th:fragment="navbar">
-            <ul class="navTable">
-                <li class="navElement">
-                    <a href="homePage.html">
-                        <i class="fa-solid fa-house fa-3x"></i>
-                        <span>Home</span>
-                    </a>
-                </li>
-                <li class="navElement">
-                    <button class="dropdown">
-                        <i class="fa-solid fa-magnifying-glass fa-3x"></i>
-                        <span>Search</span> 
-                    </button>
-                </li>
-                <li class="navElement">
-                    <a href="">
-                        <i class="fa-solid fa-inbox fa-3x"></i>
-                        <span>Chat</span>
-                    </a>
-                </li>
-                <li class="navElement">
-                    <a href="">
-                        <i class="fa-solid fa-bell fa-3x"></i>
-                        <span>Notifications</span>
-                    </a>
-                </li>
-                <li class="navElementImg">
-                      <a href=""><img th:src="@{/media/{img}(img=${user.profilePicture})}" class="profileNavImg" alt="pic">
-                    <span class="imgSpan">Profile</span>
-                    </a>
-                </li>
-            </ul>
-                  
-        </nav>
+
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
         <div class="feed">
             <div th:each="post: ${feed}" class="post-card">
                 <div class="post-card__header">
-                    <img th:src="@{/media/{img}(img=${user.profilePicture})}" class="profile-photo">
+                    <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" class="profile-photo">
                     <span th:text="${user.name}"></span>
-                    <span class="date" th:text="${#dates.format(post.createdAt, 'dd.MM.yyyy HH:mm')}"></span>
+                    <span class="date" th:text="${#dates.format(post.createdAt, 'dd.MM.yyyy')}"></span>
                 </div>
-                <div class="post-card__body">
-                    <img th:if="${post.rawImage != null}" th:src="@{/media/{img}(img=${post.rawImage})}" class="post-image">
-                    <p th:text="${post.message}"></p>
-                </div>
+                <a th:href="@{/post/{postId}(postId=${post.id})}">
+                    <div class="post-card__body">
+                        <img th:if="${post.rawImage != null}" th:src="@{/media/{userId}/{img}(userId=${post.userId},img=${post.rawImage})}" style="width:50%; height: 50%" class="post-image">
+                        <p th:text="${post.message}"></p>
+                        <span th:text="${post.likeNumber}"></span> likes
+                    </div>
+                </a>
                 <div class="post-footer">
-                    <span th:text="${post.likeNumber}"></span> likes
                 </div>
             </div>
+
+
         </div>
+
+
 
 </body>
 </html>

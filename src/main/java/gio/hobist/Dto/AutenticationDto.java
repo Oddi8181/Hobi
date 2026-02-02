@@ -19,7 +19,7 @@ public class AutenticationDto {
    private String password;
    private String confirmPassword;
 
-    public void cleanOldData(){//cleans unnecessary data for better security
+    public void cleanOldData(){//M.G: cleans unnecessary data for better security
         id=null;
         name=null;
         surname=null;

@@ -5,6 +5,7 @@ import gio.hobist.Entity.User;
 import gio.hobist.Exception.AutenticationException;
 import gio.hobist.Repository.UserRepository;
 import gio.hobist.utils.PasswordHasher;
+import gio.hobist.utils.PasswordValidator;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,14 @@ public class AutenticationService {
         else if(DtoUser.getPassword()==null || DtoUser.getPassword().equals("") ){
             throw new AutenticationException("password missing");
         }
-        else if(DtoUser.getEmail()==null || DtoUser.getEmail().equals("") ){
+        
+        // Validate password strength
+        var passwordErrors = PasswordValidator.validatePassword(DtoUser.getPassword());
+        if (!passwordErrors.isEmpty()) {
+            throw new AutenticationException(String.join(", ", passwordErrors));
+        }
+        
+        if(DtoUser.getEmail()==null || DtoUser.getEmail().equals("") ){
             throw new AutenticationException("email missing");
         }
         else if(DtoUser.getConfirmPassword()==null || DtoUser.getConfirmPassword().equals("") ){
@@ -67,7 +75,7 @@ public class AutenticationService {
 
         var user =userRepository.findByEmail(DtoUser.getEmail());
         if(user==null){
-            throw new AutenticationException("Email dosen't exists");
+            throw new AutenticationException("Email doesn't exist");
         }
 
        if (PasswordHasher.verifyPassword(DtoUser.getPassword(),user.getPassword())){

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${user.name + ' ' + user.surname}">User profile</title>
+    <link rel="stylesheet" th:href="@{/style2.css}">
+</head>
+<body>
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+
+<section class="profile-section">
+    <div class="profile-header">
+        <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}"
+             th:alt="${user.name + ' avatar'}" />
+        <h1 th:text="${user.name + ' ' + user.surname}">Name Surname</h1>
+        <p th:text="${user.userPageDescription}">Opis...</p>
+    </div>
+
+    <div class="profile-content">
+        <div class="basic-info">
+            <p><strong>Email:</strong> <span th:text="${user.email}">email</span></p>
+            <p><strong>City:</strong> <span th:text="${user.city != null ? user.city.name : '—'}">grad</span></p>
+            <p><strong>Country:</strong> <span th:text="${user.country != null ? user.country.name : '—'}">država</span></p>
+        </div>
+
+        <div th:if="${isFriend}">
+            <h2>Objave</h2>
+            <div th:if="${posts == null or #lists.isEmpty(posts)}">
+                <p>Nema objava.</p>
+            </div>
+            <div th:each="post : ${posts}" class="post-item">
+                <p th:text="${post.message}">Sadržaj objave</p>
+                <div th:if="${post.image != null}">
+                    <img th:src="@{/media/{userId}/{img}(userId=${post.idUser},img=${post.image})}" alt="post image" style="max-width: 100%;"/>
+                </div>
+                <small th:text="${#dates.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">Datum</small>
+            </div>
+        </div>
+
+        <div th:unless="${isFriend}">
+            <p>Objave možete vidjeti tek kada postanete prijatelji.</p>
+        </div>
+    </div>
+</section>
+</body>
+</html>

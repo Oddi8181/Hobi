@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}">
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+    <title>Notifications</title>
+</head>
+<body>
+<div th:each="user : ${users}" class="search-result">
+    <img th:src="@{/media/{userId}/{img}(userId=${user.id},img=${user.profilePicture})}" class="result-avatar" alt="Profile picture">
+    <div class="result-info">
+        <span class="name" th:text="${user.name}">Name</span>
+        <span class="surname" th:text="${user.surname}">Surname</span>
+    </div>
+    <a th:href="@{/friendship/add/{friendId}(friendId=${user.id})}" class="add-friend-btn">
+        <i class="fa-solid fa-user-plus"></i> Add Friend
+    </button>
+  </a>
+</div>
+</body>
+</html>
+
+

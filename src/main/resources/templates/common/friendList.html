@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" th:href="@{/style2.css}">
+    <script src="https://kit.fontawesome.com/d4739cb5c2.js" crossorigin="anonymous"></script>
+    <title>Chat</title>
+</head>
+<body>
+<nav th:replace="~{common/navbar :: navbar}"></nav>
+<div id="friends">
+    <div th:each="f : ${friends}">
+        <a th:href="@{/chat/{friendId}(friendId=${f.id})}">
+            <img th:src="@{/media/{userId}/{img}(userId=${f.id},img=${f.profilePicture})}"  alt="profilePicture">
+            <span  th:text="${f.name}"></span>
+            <span  th:text="${f.surname}"></span>
+        </a>
+    </div>
+</div>

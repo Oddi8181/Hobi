@@ -1,26 +1,34 @@
 package gio.hobist.Entity;
 
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+
 import java.io.Serializable;
 import java.util.Objects;
 import java.util.UUID;
 
+@Getter
+@Setter
+@RequiredArgsConstructor
+
 public class HobbyUserId implements Serializable {
 
-    private UUID userId;
+    private UUID user;
 
-    private UUID hobbyId;
+    private UUID hobby;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         HobbyUserId that = (HobbyUserId) o;
-        return Objects.equals(userId, that.userId)
-                && Objects.equals(hobbyId, that.hobbyId);
+        return Objects.equals(user, that.user)
+                && Objects.equals(hobby, that.hobby);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(userId,hobbyId);
+        return Objects.hash(user, hobby);
     }
 }
